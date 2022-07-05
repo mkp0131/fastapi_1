@@ -1,12 +1,8 @@
-import requests  # get 요청을 받는 파이썬 기본 라이브러리
-from fastapi import FastAPI, Request  # fastapi 라이브러리, Request 값 import
-from pydantic import BaseModel  # 파라미터 검증을 도와주는 라이브러리
-from fastapi.responses import HTMLResponse  # 응답 데이터 타입
-from fastapi.templating import Jinja2Templates  # HTML view engine
+import requests
+from fastapi import FastAPI
+from pydantic import BaseModel
 
 app = FastAPI()
-
-template = Jinja2Templates(directory="templates")
 
 # 플로우 정리
 # http://worldtimeapi.org/api/timezone/Asia/Seoul
@@ -25,18 +21,15 @@ def root():
 # 도시 리스트
 city_list = []
 
-# 파라미터 인터페이스 정의
+
 class City(BaseModel):
     name: str
     timezone: str
 
 
 # 도시 목록
-@app.get("/cities", response_class=HTMLResponse)
-def get_cities(request: Request):  # request에 Request 할당
-    # html 에 넘겨주는 변수
-    context = {}
-
+@app.get("/cities")
+def get_cities():
     data_list = []
     for city in city_list:
         # api 요청
@@ -54,10 +47,7 @@ def get_cities(request: Request):  # request에 Request 할당
             print("응답실패")
             print(rs_code)
 
-    context["request"] = request
-    context["city_list"] = data_list
-
-    return template.TemplateResponse("cities.html", context)
+    return data_list
 
 
 # 도시 입력
@@ -69,7 +59,6 @@ def get_cities(request: Request):  # request에 Request 할당
 @app.post("/cities")
 def create_cities(city: City):  # City 클래스 형식에 맞지 않으면 오류가 발생한다.
     city_list.append(city.dict())  # object 형태로 만들어서 배열에 push 한다
-    print(city_list)
     return city_list[-1]
 
 

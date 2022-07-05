@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <h1>City list</h1>
+  <ul>
+{# context 의 속성을 변수로 사용 할 수 있다 #}
+{% if city_list %}
+  {% for city in city_list %}
+    <li>{{city.timezone}}: {{city.datetime}}</li>
+  {% endfor %}
+{% else %}
+    <li>No Data</li>
+{% endif %}
+  </ul>
+</body>
+</html>
